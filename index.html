@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{NOME}} — {{SEGMENTO}} em {{CIDADE}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&family=Jost:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --marrom: {{COR_PRIMARIA}};
+    --laranja: {{COR_SECUNDARIA}};
+    --creme: #faf6f0;
+    --creme2: #f2ebe0;
+    --texto: #1c1410;
+    --cinza: #7a6a5a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Jost',sans-serif; background:var(--creme); color:var(--texto); overflow-x:hidden; }
+
+  /* NAV */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:24px 64px;
+    transition:all 0.4s;
+  }
+  nav.scrolled {
+    background:rgba(250,246,240,0.96);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(0,0,0,0.06);
+    padding:16px 64px;
+    box-shadow:0 2px 20px rgba(0,0,0,0.06);
+  }
+  .nav-logo {
+    font-family:'Cormorant Garamond',serif;
+    font-size:22px; font-weight:700;
+    color:#fff; text-decoration:none;
+    letter-spacing:1px; transition:color 0.4s;
+  }
+  nav.scrolled .nav-logo { color:var(--marrom); }
+  .nav-links { display:flex; gap:36px; list-style:none; align-items:center; }
+  .nav-links a {
+    font-size:13px; font-weight:500; letter-spacing:1px;
+    color:rgba(255,255,255,0.8); text-decoration:none; transition:color 0.3s;
+  }
+  nav.scrolled .nav-links a { color:var(--cinza); }
+  .nav-links a:hover { color:var(--laranja) !important; }
+  .nav-cta {
+    background:var(--laranja); color:#fff !important;
+    padding:10px 22px; font-weight:600 !important;
+  }
+  nav.scrolled .nav-cta { color:#fff !important; }
+
+  /* HERO */
+  #hero {
+    position:relative; height:100vh; min-height:700px;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center; overflow:hidden;
+  }
+  .hero-bg {
+    position:absolute; inset:0;
+    background-image:url('{{FOTO_HERO}}');
+    background-size:cover; background-position:center;
+    animation:slowZoom 12s ease-out forwards;
+  }
+  @keyframes slowZoom { from{transform:scale(1.1)} to{transform:scale(1)} }
+  .hero-overlay {
+    position:absolute; inset:0;
+    background:linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.65) 100%);
+  }
+  .hero-content { position:relative; z-index:2; max-width:800px; padding:0 24px; animation:fadeUp 1s ease-out 0.3s both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  .hero-eyebrow {
+    font-size:12px; font-weight:500; letter-spacing:5px;
+    text-transform:uppercase; color:var(--laranja);
+    margin-bottom:24px;
+  }
+  .hero-h1 {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(52px,8vw,110px);
+    font-weight:700; line-height:0.95;
+    color:#fff; margin-bottom:28px; letter-spacing:-2px;
+  }
+  .hero-h1 em { font-style:italic; color:var(--laranja); }
+  .hero-p { font-size:16px; font-weight:300; color:rgba(255,255,255,0.8); margin-bottom:40px; letter-spacing:0.5px; }
+  .hero-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+  .btn-laranja {
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--laranja); color:#fff;
+    padding:16px 36px;
+    font-size:13px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase;
+    text-decoration:none; transition:all 0.3s;
+  }
+  .btn-laranja:hover { background:#fff; color:var(--marrom); transform:translateY(-2px); }
+  .btn-ghost {
+    display:inline-flex; align-items:center; gap:10px;
+    border:1px solid rgba(255,255,255,0.5); color:#fff;
+    padding:16px 36px;
+    font-size:13px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase;
+    text-decoration:none; transition:all 0.3s;
+  }
+  .btn-ghost:hover { border-color:var(--laranja); color:var(--laranja); }
+  .hero-scroll-hint {
+    position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    color:rgba(255,255,255,0.4); font-size:11px; letter-spacing:3px; text-transform:uppercase; z-index:2;
+  }
+  .scroll-dot { width:6px; height:6px; border-radius:50%; background:var(--laranja); animation:bounce 2s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+  /* SOBRE */
+  #sobre { background:var(--creme); padding:120px 64px; }
+  .sobre-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1.1fr 1fr; gap:80px; align-items:center; }
+  .sobre-fotos {
+    display:grid; grid-template-columns:1fr 1fr;
+    grid-template-rows:320px 200px; gap:12px;
+    position:relative;
+  }
+  .sobre-foto { overflow:hidden; }
+  .sobre-foto:first-child { grid-row:1/3; }
+  .sobre-foto img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s; }
+  .sobre-foto:hover img { transform:scale(1.04); }
+  .sobre-badge {
+    position:absolute; bottom:-20px; right:-20px;
+    width:100px; height:100px; border-radius:50%;
+    background:var(--laranja); display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond',serif;
+    box-shadow:0 8px 30px rgba(0,0,0,0.2);
+  }
+  .sobre-badge span:first-child { font-size:28px; font-weight:700; color:#fff; line-height:1; }
+  .sobre-badge span:last-child { font-size:10px; color:rgba(255,255,255,0.8); letter-spacing:1px; }
+  .label-sm {
+    font-size:11px; font-weight:600; letter-spacing:4px;
+    text-transform:uppercase; color:var(--laranja);
+    margin-bottom:16px; display:block;
+  }
+  .h2 {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(32px,4vw,56px); font-weight:700;
+    line-height:1.05; color:var(--texto); margin-bottom:20px; letter-spacing:-0.5px;
+  }
+  .h2 em { color:var(--laranja); font-style:italic; }
+  .body-p { font-size:16px; line-height:1.9; color:var(--cinza); margin-bottom:16px; font-weight:300; }
+
+  /* MENU/SERVIÇOS */
+  #servicos { background:var(--marrom); padding:120px 64px; }
+  .servicos-inner { max-width:1100px; margin:0 auto; }
+  .servicos-header { text-align:center; margin-bottom:64px; }
+  .servicos-header .label-sm { color:var(--laranja); }
+  .servicos-header .h2 { color:#fff; }
+  .menu-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(255,255,255,0.08); }
+  .menu-item {
+    background:rgba(255,255,255,0.03); padding:40px 32px;
+    border:1px solid rgba(255,255,255,0.06);
+    transition:all 0.3s; position:relative; overflow:hidden;
+  }
+  .menu-item::after {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background:var(--laranja); transform:scaleX(0); transition:transform 0.3s;
+  }
+  .menu-item:hover { background:rgba(255,255,255,0.08); }
+  .menu-item:hover::after { transform:scaleX(1); }
+  .menu-icon { font-size:32px; margin-bottom:16px; }
+  .menu-nome { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:#fff; margin-bottom:10px; }
+  .menu-desc { font-size:14px; line-height:1.7; color:rgba(255,255,255,0.5); font-weight:300; }
+
+  /* GALERIA */
+  #galeria { background:var(--creme2); padding:120px 64px; }
+  .galeria-inner { max-width:1100px; margin:0 auto; }
+  .galeria-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px; }
+  .galeria-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    grid-template-rows:250px 180px; gap:10px;
+  }
+  .galeria-item { overflow:hidden; position:relative; }
+  .galeria-item:first-child { grid-column:1/3; grid-row:1/3; }
+  .galeria-item img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease; }
+  .galeria-item:hover img { transform:scale(1.08); }
+  .galeria-overlay {
+    position:absolute; inset:0;
+    background:rgba(0,0,0,0); transition:background 0.3s;
+  }
+  .galeria-item:hover .galeria-overlay { background:rgba(0,0,0,0.15); }
+
+  /* DEPOIMENTOS */
+  #depoimentos { background:var(--creme); padding:120px 64px; }
+  .depo-inner { max-width:1100px; margin:0 auto; }
+  .depo-header { text-align:center; margin-bottom:64px; }
+  .depo-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .depo-card {
+    background:var(--creme2); padding:40px;
+    position:relative; transition:transform 0.3s;
+    border-bottom:3px solid transparent;
+  }
+  .depo-card:hover { transform:translateY(-6px); border-bottom-color:var(--laranja); }
+  .depo-stars { color:var(--laranja); font-size:14px; letter-spacing:3px; margin-bottom:20px; }
+  .depo-text { font-family:'Cormorant Garamond',serif; font-size:18px; line-height:1.7; color:var(--cinza); font-style:italic; margin-bottom:24px; }
+  .depo-autor { font-size:13px; font-weight:600; color:var(--texto); letter-spacing:1px; text-transform:uppercase; }
+  .depo-card::before { content:'"'; position:absolute; top:16px; right:24px; font-family:'Cormorant Garamond',serif; font-size:100px; color:var(--laranja); opacity:0.15; line-height:1; }
+
+  /* HORÁRIOS */
+  #horarios { background:var(--marrom); padding:100px 64px; }
+  .horarios-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+  .horario-lista { margin-top:32px; }
+  .horario-item { display:flex; justify-content:space-between; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.08); }
+  .horario-dia { font-size:14px; font-weight:400; color:rgba(255,255,255,0.6); }
+  .horario-hora { font-size:14px; font-weight:600; color:var(--laranja); }
+  .horario-hora.fechado { color:rgba(255,255,255,0.2); }
+
+  /* MAPA */
+  #localizacao { background:#0d0905; }
+  .mapa-inner { display:grid; grid-template-columns:1fr 1.3fr; min-height:500px; }
+  .mapa-info { padding:80px 64px; display:flex; flex-direction:column; justify-content:center; }
+  .mapa-info .label-sm { color:var(--laranja); }
+  .mapa-info .h2 { color:#fff; }
+  .mapa-detalhe { display:flex; align-items:flex-start; gap:16px; margin-bottom:24px; }
+  .mapa-icon { width:44px; height:44px; background:rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .mapa-detalhe p { font-size:11px; color:rgba(255,255,255,0.35); letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; }
+  .mapa-detalhe strong { font-size:15px; color:rgba(255,255,255,0.85); font-weight:300; }
+  .mapa-btns { display:flex; gap:12px; margin-top:36px; flex-wrap:wrap; }
+  .mapa-embed { width:100%; height:100%; min-height:500px; border:none; filter:grayscale(20%) sepia(20%); }
+
+  /* CTA */
+  #cta {
+    padding:120px 64px; text-align:center;
+    background:var(--creme2);
+    position:relative; overflow:hidden;
+  }
+  .cta-h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(40px,6vw,80px); font-weight:700; color:var(--marrom); margin-bottom:16px; letter-spacing:-1px; }
+  .cta-p { font-size:17px; color:var(--cinza); margin-bottom:40px; max-width:480px; margin-left:auto; margin-right:auto; font-weight:300; }
+
+  /* FOOTER */
+  footer { background:#0d0905; padding:48px 64px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.04); }
+  .footer-logo { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:var(--laranja); }
+  .footer-copy { font-size:12px; color:rgba(255,255,255,0.2); }
+  .footer-links { display:flex; gap:28px; list-style:none; }
+  .footer-links a { font-size:12px; color:rgba(255,255,255,0.3); text-decoration:none; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--laranja); }
+
+  .demo-badge { position:fixed; bottom:24px; right:24px; background:var(--laranja); color:#fff; padding:12px 20px; font-size:12px; font-weight:600; letter-spacing:0.5px; z-index:999; cursor:pointer; box-shadow:0 8px 30px rgba(0,0,0,0.25); transition:transform 0.2s; }
+  .demo-badge:hover { transform:translateY(-3px); }
+
+  @media (max-width:900px) {
+    nav { padding:16px 24px; }
+    .nav-links { display:none; }
+    #hero { min-height:100svh; }
+    #sobre,#servicos,#galeria,#depoimentos,#horarios { padding:80px 24px; }
+    .sobre-inner { grid-template-columns:1fr; gap:48px; }
+    .sobre-badge { display:none; }
+    .menu-grid,.depo-grid { grid-template-columns:1fr; }
+    .galeria-grid { grid-template-columns:1fr 1fr; grid-template-rows:auto; }
+    .galeria-item:first-child { grid-column:auto; grid-row:auto; height:250px; }
+    .galeria-item { height:200px; }
+    .horarios-inner { grid-template-columns:1fr; gap:40px; }
+    .mapa-inner { grid-template-columns:1fr; }
+    .mapa-info { padding:60px 24px; }
+    #cta { padding:80px 24px; }
+    footer { padding:40px 24px; flex-direction:column; gap:20px; text-align:center; }
+  }
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">{{NOME}}</a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#servicos">Cardápio</a></li>
+    <li><a href="#galeria">Galeria</a></li>
+    <li><a href="#depoimentos">Avaliações</a></li>
+    <li><a href="#localizacao">Localização</a></li>
+    <li><a href="{{WHATSAPP_LINK}}" target="_blank" class="nav-cta">Reservar</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">{{SEGMENTO}} · {{CIDADE}}, {{ESTADO}}</div>
+    <h1 class="hero-h1">{{NOME}}</h1>
+    <p class="hero-p">{{SERVICOS}} — sabor e qualidade em cada detalhe</p>
+    <div class="hero-btns">
+      <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-laranja">💬 Fazer Reserva</a>
+      <a href="#sobre" class="btn-ghost">Conheça mais</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint"><div class="scroll-dot"></div><span>Scroll</span></div>
+</section>
+
+<section id="sobre">
+  <div class="sobre-inner">
+    <div class="sobre-fotos">
+      <div class="sobre-foto"><img src="{{FOTO_2}}" alt="{{NOME}}"></div>
+      <div class="sobre-foto"><img src="{{FOTO_3}}" alt="{{NOME}}"></div>
+      <div class="sobre-foto"><img src="{{FOTO_HERO}}" alt="{{NOME}}"></div>
+      <div class="sobre-badge"><span>5★</span><span>AVALIAÇÃO</span></div>
+    </div>
+    <div>
+      <span class="label-sm">Nossa História</span>
+      <h2 class="h2">Uma experiência <em>única</em> em {{CIDADE}}</h2>
+      <p class="body-p">{{NOME}} é referência em {{SEGMENTO}} em {{CIDADE}}. Combinamos ingredientes selecionados com técnicas apuradas para criar uma experiência gastronômica memorável.</p>
+      <p class="body-p">Oferecemos {{SERVICOS}} em um ambiente acolhedor e sofisticado. Venha nos visitar!</p>
+      <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-laranja" style="margin-top:24px;">💬 Reservar mesa</a>
+    </div>
+  </div>
+</section>
+
+<section id="servicos">
+  <div class="servicos-inner">
+    <div class="servicos-header">
+      <span class="label-sm">O Que Servimos</span>
+      <h2 class="h2" style="color:#fff;">Nosso <em style="color:var(--laranja)">Cardápio</em></h2>
+    </div>
+    <div class="menu-grid" id="servicos-grid"></div>
+  </div>
+</section>
+
+<section id="galeria">
+  <div class="galeria-inner">
+    <div class="galeria-header">
+      <div><span class="label-sm">Nosso Espaço</span><h2 class="h2">Galeria</h2></div>
+      <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-laranja">Reservar</a>
+    </div>
+    <div class="galeria-grid">
+      <div class="galeria-item"><img src="{{FOTO_HERO}}" alt="{{NOME}}"><div class="galeria-overlay"></div></div>
+      <div class="galeria-item"><img src="{{FOTO_2}}" alt="{{NOME}}"><div class="galeria-overlay"></div></div>
+      <div class="galeria-item"><img src="{{FOTO_3}}" alt="{{NOME}}"><div class="galeria-overlay"></div></div>
+      <div class="galeria-item"><img src="{{FOTO_2}}" alt="{{NOME}}"><div class="galeria-overlay"></div></div>
+      <div class="galeria-item"><img src="{{FOTO_3}}" alt="{{NOME}}"><div class="galeria-overlay"></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="depoimentos">
+  <div class="depo-inner">
+    <div class="depo-header">
+      <span class="label-sm">O Que Dizem</span>
+      <h2 class="h2">Avaliações dos <em>nossos clientes</em></h2>
+    </div>
+    <div class="depo-grid">
+      <div class="depo-card"><div class="depo-stars">★★★★★</div><p class="depo-text">"Ambiente incrível, comida deliciosa e atendimento nota 10. Com certeza o melhor {{SEGMENTO}} de {{CIDADE}}!"</p><div class="depo-autor">Juliana M.</div></div>
+      <div class="depo-card"><div class="depo-stars">★★★★★</div><p class="depo-text">"Cada detalhe pensado com carinho. Os pratos são uma experiência única, impossível não voltar sempre!"</p><div class="depo-autor">Pedro A.</div></div>
+      <div class="depo-card"><div class="depo-stars">★★★★★</div><p class="depo-text">"Lugar especial para momentos especiais. Qualidade impecável, preço justo e localização perfeita em {{CIDADE}}."</p><div class="depo-autor">Camila R.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="horarios">
+  <div class="horarios-inner">
+    <div>
+      <span class="label-sm" style="color:var(--laranja)">Quando Estamos Abertos</span>
+      <h2 class="h2" style="color:#fff;">Horário de <em style="color:var(--laranja)">Funcionamento</em></h2>
+      <p style="color:rgba(255,255,255,0.5);line-height:1.9;font-size:15px;margin-top:16px;font-weight:300;">{{HORARIO}}</p>
+      <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-laranja" style="margin-top:32px;">💬 Fazer reserva</a>
+    </div>
+    <div class="horario-lista">
+      <div class="horario-item"><span class="horario-dia">Segunda-feira</span><span class="horario-hora">11:00 – 23:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Terça-feira</span><span class="horario-hora">11:00 – 23:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Quarta-feira</span><span class="horario-hora">11:00 – 23:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Quinta-feira</span><span class="horario-hora">11:00 – 23:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Sexta-feira</span><span class="horario-hora">11:00 – 00:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Sábado</span><span class="horario-hora">11:00 – 00:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Domingo</span><span class="horario-hora">11:00 – 22:00</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="localizacao">
+  <div class="mapa-inner">
+    <div class="mapa-info">
+      <span class="label-sm">Como Chegar</span>
+      <h2 class="h2">Onde <em style="color:var(--laranja)">Estamos</em></h2>
+      <div class="mapa-detalhe"><div class="mapa-icon">📍</div><div><p>Endereço</p><strong>{{ENDERECO}}</strong></div></div>
+      <div class="mapa-detalhe"><div class="mapa-icon">📞</div><div><p>Telefone</p><strong>{{TELEFONE}}</strong></div></div>
+      <div class="mapa-detalhe"><div class="mapa-icon">⏰</div><div><p>Horário</p><strong>{{HORARIO}}</strong></div></div>
+      <div class="mapa-btns">
+        <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-laranja">💬 WhatsApp</a>
+        <a href="https://www.google.com/maps/search/?api=1&query={{ENDERECO}}" target="_blank" class="btn-ghost">🗺 Ver Mapa</a>
+      </div>
+    </div>
+    <iframe class="mapa-embed" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&q={{ENDERECO}}" allowfullscreen loading="lazy"></iframe>
+  </div>
+</section>
+
+<section id="cta">
+  <h2 class="cta-h2">Reserve sua mesa hoje</h2>
+  <p class="cta-p">Entre em contato pelo WhatsApp e garanta seu lugar nessa experiência única.</p>
+  <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-laranja">💬 Falar com {{NOME}}</a>
+</section>
+
+<footer>
+  <div class="footer-logo">{{NOME}}</div>
+  <p class="footer-copy">© 2025 {{NOME}} · {{CIDADE}}, {{ESTADO}}</p>
+  <ul class="footer-links">
+    <li><a href="{{WHATSAPP_LINK}}" target="_blank">WhatsApp</a></li>
+    <li><a href="tel:{{TELEFONE}}">Ligar</a></li>
+  </ul>
+</footer>
+
+<div class="demo-badge" onclick="alert('Site demo criado para {{NOME}}. Entre em contato para ter o seu site!')">✨ Site Demo</div>
+
+<script>
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
+  });
+  const servicosRaw = '{{SERVICOS}}';
+  const lista = servicosRaw.split(',').map(s => s.trim()).filter(Boolean);
+  const icones = ['🍽️','🥩','🍹','🥗','☕','🍰','🍕','🫕'];
+  const descs = ['Preparado com ingredientes selecionados e muito sabor','Receita especial da casa, feita com carinho','Perfeito para qualquer ocasião especial','Sabor incomparável em cada garfada','Experiência gastronômica inesquecível','Combinação perfeita de sabores únicos'];
+  const grid = document.getElementById('servicos-grid');
+  lista.slice(0,6).forEach((s,i) => {
+    grid.innerHTML += `<div class="menu-item"><div class="menu-icon">${icones[i%icones.length]}</div><div class="menu-nome">${s}</div><div class="menu-desc">${descs[i%descs.length]}</div></div>`;
+  });
+  if (!lista.length) grid.innerHTML = '<div class="menu-item"><div class="menu-icon">🍽️</div><div class="menu-nome">Pratos</div><div class="menu-desc">Culinária especial</div></div><div class="menu-item"><div class="menu-icon">🍹</div><div class="menu-nome">Bebidas</div><div class="menu-desc">Seleção especial</div></div><div class="menu-item"><div class="menu-icon">🍰</div><div class="menu-nome">Sobremesas</div><div class="menu-desc">Doces irresistíveis</div></div>';
+  const observer = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting){x.target.style.opacity='1';x.target.style.transform='translateY(0)';} }),{threshold:0.1});
+  document.querySelectorAll('.menu-item,.depo-card').forEach(el => { el.style.opacity='0'; el.style.transform='translateY(20px)'; el.style.transition='opacity 0.5s ease, transform 0.5s ease'; observer.observe(el); });
+</script>
+</body>
+</html>
